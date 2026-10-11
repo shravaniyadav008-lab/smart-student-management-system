@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Settings - Smart Student Management System</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <div class="dashboard-layout">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-brand">
+
+                <div class="brand-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+
+                <div class="brand-text">
+                    <strong>Smart Student</strong>
+                    <span>Management System</span>
+                </div>
+
+            </div>
+
+            <div class="sidebar-section-title">
+                MAIN MENU
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="/dashboard" class="nav-link">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="/students" class="nav-link">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span>Students</span>
+                </a>
+
+                <a href="/courses" class="nav-link">
+                    <i class="fa-solid fa-book"></i>
+                    <span>Courses</span>
+                </a>
+
+                <a href="/attendance" class="nav-link">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+
+                <a href="/results" class="nav-link">
+                    <i class="fa-solid fa-chart-column"></i>
+                    <span>Results</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-section-title system-title">
+                SYSTEM
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="/settings" class="nav-link active">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+
+                <a href="{{ url_for('auth.logout') }}" class="nav-link">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <div class="admin-mini">
+
+                    <div class="admin-avatar">
+                        {{ session.get("user_name", "A")[0].upper() }}
+                    </div>
+
+                    <div>
+
+                        <strong>
+                {{ session.get("user_name", "Administrator") }}
+            </strong>
+
+                        <small>
+                Administrator
+            </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ================= MAIN CONTENT ================= -->
+
+        <main class="main-content">
+
+            <!-- ================= TOPBAR ================= -->
+
+            <header class="topbar">
+
+                <div class="topbar-left">
+
+                    <div class="page-heading">
+
+                        <h1>Settings</h1>
+
+                        <p>
+                            Manage your account and system settings.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="topbar-right">
+
+                    <!-- Notification -->
+
+                    <div class="notification-wrapper">
+
+                        <button type="button" class="notification-btn" id="notificationBtn">
+
+                            <i class="fa-regular fa-bell"></i>
+
+                            <span class="notification-dot"
+                                id="notificationDot">
+                            </span>
+
+                        </button>
+
+                        <div class="notification-dropdown" id="notificationDropdown">
+
+                            <div class="notification-header">
+
+                                <div>
+
+                                    <h3>Notifications</h3>
+
+                                    <span>
+                                        Recent system activity
+                                    </span>
+
+                                </div>
+
+                                <button type="button" id="markNotificationsRead">
+
+                                    Mark all as read
+
+                                </button>
+
+                            </div>
+
+                            <div class="notification-list">
+
+                                <div class="notification-empty">
+
+                                    <div class="notification-empty-icon">
+                                        <i class="fa-regular fa-bell"></i>
+                                    </div>
+
+                                    <strong>
+                                        No new notifications
+                                    </strong>
+
+                                    <span>
+                                        You're all caught up.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Profile -->
+
+                    <div class="profile-wrapper">
+
+                        <button type="button" class="profile-info" id="profileBtn">
+
+                            <div class="profile-avatar">
+
+                                {{ session.get("user_name", "A")[0].upper() }}
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    {{ session.get("user_name", "Administrator") }}
+                                </strong>
+
+                                <span>Admin</span>
+
+                            </div>
+
+                            <i class="fa-solid fa-chevron-down profile-arrow"></i>
+
+                        </button>
+
+
+                        <div class="profile-dropdown" id="profileDropdown">
+
+                            <div class="profile-dropdown-header">
+
+                                <div class="profile-dropdown-avatar">
+
+                                    {{ session.get("user_name", "A")[0].upper() }}
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        {{ session.get("user_name", "Administrator") }}
+                                    </strong>
+
+                                    <span>Administrator</span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="profile-dropdown-divider"></div>
+
+                            <a href="/settings" class="profile-dropdown-item">
+
+                                <i class="fa-solid fa-gear"></i>
+
+                                <span>Settings</span>
+
+                            </a>
+
+                            <div class="profile-dropdown-divider"></div>
+
+                            <a href="{{ url_for('auth.logout') }}" class="profile-dropdown-item logout-item">
+
+                                <i class="fa-solid fa-right-from-bracket"></i>
+
+                                <span>Logout</span>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- ================= PAGE CONTENT ================= -->
+
+            <section class="page-content">
+                <div id="settingsMessage" class="settings-message"></div>
+                <div class="settings-grid">
+
+
+                    <!-- ================= PROFILE CARD ================= -->
+
+                    <div class="content-card settings-card">
+
+                        <div class="settings-card-header">
+
+                            <div>
+
+                                <h2>Profile Information</h2>
+
+                                <p>
+                                    Update your administrator account details.
+                                </p>
+
+                            </div>
+
+                            <div class="settings-card-icon">
+
+                                <i class="fa-regular fa-user"></i>
+
+                            </div>
+
+                        </div>
+
+
+                        <form id="profileForm">
+
+                            <div class="settings-profile-preview">
+
+                                <div class="settings-avatar" id="settingsAvatar">
+
+                                    {{ session.get("user_name", "A")[0].upper() }}
+
+                                </div>
+
+                                <div>
+
+                                    <strong id="profilePreviewName">
+
+                                        {{ session.get("user_name", "Administrator") }}
+
+                                    </strong>
+
+                                    <span>
+                                        System Administrator
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="settings-form-grid">
+
+                                <div class="form-group">
+
+                                    <label for="profile_name">
+                                        Full Name
+                                    </label>
+
+                                    <input type="text" id="profile_name" placeholder="Enter your name" required>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label for="profile_email">
+                                        Email Address
+                                    </label>
+
+                                    <input type="email" id="profile_email" placeholder="Enter email address" required>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- SAVE PROFILE BUTTON -->
+
+                            <div class="settings-form-footer">
+
+                                <button type="submit" class="primary-btn">
+
+                                    <i class="fa-solid fa-floppy-disk"></i>
+
+                                    Save Changes
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+
+                    <!-- ================= PASSWORD CARD ================= -->
+
+                    <div class="content-card settings-card">
+
+                        <div class="settings-card-header">
+
+                            <div>
+
+                                <h2>Change Password</h2>
+
+                                <p>
+                                    Update your account password.
+                                </p>
+
+                            </div>
+
+                            <div class="settings-card-icon">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                            </div>
+
+                        </div>
+
+
+                        <form id="passwordForm">
+
+                            <div class="settings-form-grid single-column">
+
+                                <div class="form-group">
+
+                                    <label for="current_password">
+                                        Current Password
+                                    </label>
+
+                                    <input type="password" id="current_password" placeholder="Enter current password" required>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label for="new_password">
+                                        New Password
+                                    </label>
+
+                                    <input type="password" id="new_password" placeholder="Enter new password" required>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label for="confirm_password">
+                                        Confirm New Password
+                                    </label>
+
+                                    <input type="password" id="confirm_password" placeholder="Confirm new password" required>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="settings-form-footer">
+
+                                <button type="submit" class="primary-btn">
+
+                                    <i class="fa-solid fa-key"></i>
+
+                                    Change Password
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+
+                    <!-- ================= ACCOUNT INFORMATION ================= -->
+
+                    <div class="content-card settings-card account-info-card">
+
+                        <div class="settings-card-header">
+
+                            <div>
+
+                                <h2>Account Information</h2>
+
+                                <p>
+                                    Basic information about your account.
+                                </p>
+
+                            </div>
+
+                            <div class="settings-card-icon">
+
+                                <i class="fa-solid fa-circle-info"></i>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="account-info-list">
+
+                            <div class="account-info-row">
+
+                                <div class="account-info-label">
+
+                                    <i class="fa-regular fa-id-card"></i>
+
+                                    <span>
+                                        Account Role
+                                    </span>
+
+                                </div>
+
+                                <strong>
+                                    Administrator
+                                </strong>
+
+                            </div>
+
+
+                            <div class="account-info-row">
+
+                                <div class="account-info-label">
+
+                                    <i class="fa-solid fa-shield-halved"></i>
+
+                                    <span>
+                                        Access Level
+                                    </span>
+
+                                </div>
+
+                                <strong>
+                                    Full Access
+                                </strong>
+
+                            </div>
+
+
+                            <div class="account-info-row">
+
+                                <div class="account-info-label">
+
+                                    <i class="fa-solid fa-user-check"></i>
+
+                                    <span>
+                                        Account Status
+                                    </span>
+
+                                </div>
+
+                                <span class="account-status-active">
+                                    Active
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================= ACCOUNT ACTIONS ================= -->
+
+                    <div class="content-card settings-card logout-settings-card">
+
+                        <div class="settings-card-header">
+
+                            <div>
+
+                                <h2>Account Actions</h2>
+
+                                <p>
+                                    Manage your current session.
+                                </p>
+
+                            </div>
+
+                            <div class="settings-card-icon logout-icon">
+
+                                <i class="fa-solid fa-right-from-bracket"></i>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="logout-settings-content">
+
+                            <div>
+
+                                <strong>
+                                    Sign out of your account
+                                </strong>
+
+                                <p>
+                                    You will need to login again to access the management system.
+                                </p>
+
+                            </div>
+
+
+                            <a href="{{ url_for('auth.logout') }}" class="danger-btn">
+
+                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+
+</body>
+
+</html>

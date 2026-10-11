@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Students | Smart Student Management System</title>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+
+<body>
+
+    <div class="dashboard-layout">
+
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside class="sidebar">
+
+            <!-- BRAND -->
+
+            <div class="sidebar-brand">
+
+                <div class="brand-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+
+                <div>
+
+                    <h2>Smart Student</h2>
+
+                    <span>
+                        Management System
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- MAIN MENU -->
+
+            <div class="sidebar-section-title">
+                MAIN MENU
+            </div>
+
+
+            <nav class="sidebar-nav">
+
+                <!-- Dashboard -->
+
+                <a href="{{ url_for('dashboard') }}" class="nav-link">
+
+                    <i class="fa-solid fa-house"></i>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+                <!-- Students -->
+
+                <a href="{{ url_for('students') }}" class="nav-link active">
+
+                    <i class="fa-solid fa-user-graduate"></i>
+
+                    <span>
+                        Students
+                    </span>
+
+                </a>
+
+
+                <!-- Courses -->
+
+                <a href="/courses" class="nav-link">
+                    <i class="fa-solid fa-book"></i>
+                    <span>Courses</span>
+                </a>
+
+
+                <!-- Attendance -->
+
+                <a href="/attendance" class="nav-link">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+
+
+                <!-- Results -->
+
+                <a href="/results" class="nav-link">
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                    <span>
+                        Results
+                    </span>
+
+                </a>
+
+            </nav>
+
+
+            <!-- SYSTEM -->
+
+            <div class="sidebar-section-title system-title">
+                SYSTEM
+            </div>
+
+
+            <nav class="sidebar-nav">
+
+                <!-- Settings -->
+
+                <a href="/settings" class="nav-link">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+
+
+                <!-- Logout -->
+
+                <a href="{{ url_for('auth.logout') }}" class="nav-link logout-link">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>
+                        Logout
+                    </span>
+
+                </a>
+
+            </nav>
+
+
+            <!-- USER -->
+
+            <div class="sidebar-bottom">
+
+                <div class="admin-mini">
+
+                    <div class="admin-avatar">
+                        {{ session.get("user_name", "A")[0].upper() }}
+                    </div>
+
+                    <div>
+
+                        <strong>
+                {{ session.get("user_name", "Administrator") }}
+            </strong>
+
+                        <small>
+                Administrator
+            </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- =====================================================
+             MAIN CONTENT
+        ====================================================== -->
+
+        <main class="main-content">
+
+
+            <!-- =================================================
+                 TOPBAR
+            ================================================== -->
+
+            <header class="topbar">
+
+                <div></div>
+
+
+                <div class="topbar-right">
+
+
+                    <!-- Notification -->
+
+                    <button type="button" class="notification-btn">
+
+                        <i class="fa-regular fa-bell"></i>
+
+                    </button>
+
+
+                    <!-- User -->
+
+                    <div class="profile-wrapper">
+
+                        <button type="button" class="profile-info" id="profileBtn">
+
+        <div class="profile-avatar">
+            {{ session.get("user_name", "A")[0].upper() }}
+        </div>
+
+        <div>
+
+            <strong>
+                {{ session.get("user_name", "Administrator") }}
+            </strong>
+
+            <span>
+                Admin
+            </span>
+
+        </div>
+
+    </button>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- =================================================
+                 STUDENTS PAGE
+            ================================================== -->
+
+            <section class="students-page">
+
+
+                <!-- PAGE HEADER -->
+
+                <div class="students-page-header">
+
+                    <div>
+
+                        <h1>
+                            Students
+                        </h1>
+
+                        <p>
+                            Manage and monitor student information.
+                        </p>
+
+                    </div>
+
+
+                    <!-- ADD STUDENT BUTTON -->
+
+                    <button type="button" class="primary-btn" id="openStudentModal">
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Add Student
+
+                    </button>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     STUDENT RECORD CARD
+                ================================================== -->
+
+                <div class="students-card">
+
+
+                    <!-- CARD HEADER -->
+
+                    <div class="students-card-header">
+
+                        <div>
+
+                            <h2>
+                                Student Records
+                            </h2>
+
+                            <p>
+                                View, search and manage all registered students.
+                            </p>
+
+                        </div>
+
+
+                        <!-- COUNT -->
+
+                        <div class="student-count">
+
+                            <strong id="studentCount">
+                                0
+                            </strong>
+
+                            <span>
+                                Students
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         TOOLBAR
+                    ================================================== -->
+
+                    <div class="students-toolbar">
+
+
+                        <!-- SEARCH -->
+
+                        <div class="student-search">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                            <input type="text" id="studentSearch" placeholder="Search by name, student ID or email...">
+
+                        </div>
+
+
+                        <!-- STATUS -->
+
+                        <select id="statusFilter">
+
+                            <option value="">
+                                All Status
+                            </option>
+
+                            <option value="Active">
+                                Active
+                            </option>
+
+                            <option value="Inactive">
+                                Inactive
+                            </option>
+
+                        </select>
+
+
+                        <!-- YEAR -->
+
+                        <select id="yearFilter">
+
+                            <option value="">
+                                All Years
+                            </option>
+
+                            <option value="First Year">
+                                First Year
+                            </option>
+
+                            <option value="Second Year">
+                                Second Year
+                            </option>
+
+                            <option value="Third Year">
+                                Third Year
+                            </option>
+
+                            <option value="Final Year">
+                                Final Year
+                            </option>
+
+                        </select>
+
+
+                        <!-- RESET -->
+
+                        <button type="button" class="reset-filter-btn" id="resetFilters">
+
+                            <i class="fa-solid fa-rotate-left"></i>
+
+                            Reset
+
+                        </button>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         TABLE
+                    ================================================== -->
+
+                    <div class="students-table-wrapper">
+
+                        <table class="students-table">
+
+
+                            <!-- TABLE HEADER -->
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Student ID
+                                    </th>
+
+                                    <th>
+                                        Student
+                                    </th>
+
+                                    <th>
+                                        Email
+                                    </th>
+
+                                    <th>
+                                        Phone
+                                    </th>
+
+                                    <th>
+                                        Year
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Action
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <!-- TABLE BODY -->
+
+                            <tbody id="studentsTableBody">
+
+                                <tr id="emptyStudentRow">
+
+                                    <td colspan="7">
+
+                                        <div class="empty-students">
+
+                                            <div class="empty-icon">
+
+                                                <i class="fa-solid fa-user-graduate"></i>
+
+                                            </div>
+
+
+                                            <h3>
+                                                No students found
+                                            </h3>
+
+
+                                            <p>
+                                                Add your first student to get started.
+                                            </p>
+
+
+                                            <button type="button" class="empty-add-btn" id="emptyAddStudent">
+
+                                                <i class="fa-solid fa-plus"></i>
+
+                                                Add Student
+
+                                            </button>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 FOOTER
+            ================================================== -->
+
+            <footer class="dashboard-footer">
+
+                © 2026 Smart Student Management System
+
+            </footer>
+
+        </main>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         ADD STUDENT MODAL
+    ========================================================== -->
+
+    <div class="student-modal" id="studentModal">
+
+        <div class="student-modal-box">
+
+
+            <!-- MODAL HEADER -->
+
+            <div class="student-modal-header">
+
+                <div>
+
+                    <h2>
+                        Add New Student
+                    </h2>
+
+                    <p>
+                        Enter student details below.
+                    </p>
+
+                </div>
+
+
+                <!-- CLOSE -->
+
+                <button type="button" class="modal-close" id="closeStudentModal">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FORM
+            ================================================== -->
+
+            <form id="studentForm">
+
+
+                <div class="student-form-grid">
+
+
+                    <!-- STUDENT ID -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Student ID
+                        </label>
+
+                        <input type="text" id="student_id" placeholder="e.g. STU001" required>
+
+                    </div>
+
+
+
+                    <!-- FULL NAME -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Full Name
+                        </label>
+
+                        <input type="text" id="full_name" placeholder="Enter full name" required>
+
+                    </div>
+
+
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Email Address
+                        </label>
+
+                        <input type="email" id="email" placeholder="student@example.com" required>
+
+                    </div>
+
+
+
+                    <!-- PHONE -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Phone Number
+                        </label>
+
+                        <input type="text" id="phone" placeholder="Enter phone number" required>
+
+                    </div>
+
+
+
+                    <!-- DOB -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Date of Birth
+                        </label>
+
+                        <input type="date" id="date_of_birth">
+
+                    </div>
+
+
+
+                    <!-- GENDER -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Gender
+                        </label>
+
+                        <select id="gender">
+
+                            <option value="">
+                                Select gender
+                            </option>
+
+                            <option value="Male">
+                                Male
+                            </option>
+
+                            <option value="Female">
+                                Female
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- YEAR -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Academic Year
+                        </label>
+
+                        <select id="year" required>
+
+                            <option value="">
+                                Select year
+                            </option>
+
+                            <option value="First Year">
+                                First Year
+                            </option>
+
+                            <option value="Second Year">
+                                Second Year
+                            </option>
+
+                            <option value="Third Year">
+                                Third Year
+                            </option>
+
+                            <option value="Final Year">
+                                Final Year
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- ADMISSION DATE -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Admission Date
+                        </label>
+
+                        <input type="date" id="admission_date">
+
+                    </div>
+
+
+
+                    <!-- ADDRESS -->
+
+                    <div class="form-group full-width">
+
+                        <label>
+                            Address
+                        </label>
+
+                        <textarea id="address" rows="3" placeholder="Enter student address"></textarea>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     MODAL FOOTER
+                ================================================== -->
+
+                <div class="student-modal-footer">
+
+
+                    <!-- CANCEL -->
+
+                    <button type="button" class="secondary-btn" id="cancelStudentModal">
+
+                        Cancel
+
+                    </button>
+
+
+                    <!-- SAVE -->
+
+                    <button type="submit" class="primary-btn">
+
+                        <i class="fa-solid fa-check"></i>
+
+                        Save Student
+
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+     EDIT STUDENT MODAL
+========================================================= -->
+
+    <div class="student-modal" id="editStudentModal">
+
+        <div class="student-modal-box">
+
+
+            <!-- MODAL HEADER -->
+
+            <div class="student-modal-header">
+
+                <div>
+
+                    <h2>
+                        Edit Student
+                    </h2>
+
+                    <p>
+                        Update student information below.
+                    </p>
+
+                </div>
+
+
+                <!-- CLOSE BUTTON -->
+
+                <button type="button" class="modal-close" id="closeEditStudentModal">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+             EDIT FORM
+        ================================================== -->
+
+            <form id="editStudentForm">
+
+
+                <div class="student-form-grid">
+
+
+                    <!-- STUDENT ID -->
+
+                    <div class="form-group">
+
+                        <label>
+                        Student ID
+                    </label>
+
+                        <input type="text" id="edit_student_id" placeholder="e.g. STU001" required>
+
+                    </div>
+
+
+
+                    <!-- FULL NAME -->
+
+                    <div class="form-group">
+
+                        <label>
+                        Full Name
+                    </label>
+
+                        <input type="text" id="edit_full_name" placeholder="Enter full name" required>
+
+                    </div>
+
+
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label>
+                        Email Address
+                    </label>
+
+                        <input type="email" id="edit_email" placeholder="student@example.com" required>
+
+                    </div>
+
+
+
+                    <!-- PHONE -->
+
+                    <div class="form-group">
+
+                        <label>
+                        Phone Number
+                    </label>
+
+                        <input type="text" id="edit_phone" placeholder="Enter phone number" required>
+
+                    </div>
+
+
+
+                    <!-- DATE OF BIRTH -->
+
+                    <div class="form-group">
+
+                        <label>
+                        Date of Birth
+                    </label>
+
+                        <input type="date" id="edit_date_of_birth">
+
+                    </div>
+
+
+
+                    <!-- GENDER -->
+
+                    <div class="form-group">
+
+                        <label>
+                        Gender
+                    </label>
+
+                        <select id="edit_gender">
+
+                        <option value="">
+                            Select gender
+                        </option>
+
+                        <option value="Male">
+                            Male
+                        </option>
+
+                        <option value="Female">
+                            Female
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                    </div>
+
+
+
+                    <!-- YEAR -->
+
+                    <div class="form-group">
+
+                        <label>
+                        Academic Year
+                    </label>
+
+                        <select id="edit_year" required>
+
+                        <option value="">
+                            Select year
+                        </option>
+
+                        <option value="First Year">
+                            First Year
+                        </option>
+
+                        <option value="Second Year">
+                            Second Year
+                        </option>
+
+                        <option value="Third Year">
+                            Third Year
+                        </option>
+
+                        <option value="Final Year">
+                            Final Year
+                        </option>
+
+                    </select>
+
+                    </div>
+
+
+
+                    <!-- ADMISSION DATE -->
+
+                    <div class="form-group">
+
+                        <label>
+                        Admission Date
+                    </label>
+
+                        <input type="date" id="edit_admission_date">
+
+                    </div>
+
+
+
+                    <!-- ADDRESS -->
+
+                    <div class="form-group full-width">
+
+                        <label>
+                        Address
+                    </label>
+
+                        <textarea id="edit_address" rows="3" placeholder="Enter student address"></textarea>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                 MODAL FOOTER
+            ================================================== -->
+
+                <div class="student-modal-footer">
+
+
+                    <!-- CANCEL -->
+
+                    <button type="button" class="secondary-btn" id="cancelEditStudentModal">
+
+                    Cancel
+
+                </button>
+
+
+                    <!-- UPDATE -->
+
+                    <button type="submit" class="primary-btn">
+
+                    <i class="fa-solid fa-pen"></i>
+
+                    Update Student
+
+                </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- =========================================================
+     VIEW STUDENT MODAL
+========================================================= -->
+
+    <div class="student-modal" id="viewStudentModal">
+
+        <div class="student-modal-box view-student-box">
+
+            <div class="student-modal-header">
+
+                <div>
+                    <h2>
+                        Student Profile
+                    </h2>
+
+                    <p>
+                        View complete student information.
+                    </p>
+                </div>
+
+                <button type="button" class="modal-close" id="closeViewStudentModal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            </div>
+
+
+            <!-- PROFILE HEADER -->
+
+            <div class="student-profile-header">
+
+                <div class="student-profile-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div class="student-profile-main">
+
+                    <h3 id="view_full_name">
+                        Student Name
+                    </h3>
+
+                    <p id="view_student_id">
+                        STU001
+                    </p>
+
+                    <span class="student-status active-status" id="view_status">
+                    Active
+                </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- STUDENT INFORMATION -->
+
+            <div class="student-profile-section">
+
+                <h3>
+                    <i class="fa-solid fa-user-graduate"></i> Personal Information
+                </h3>
+
+                <div class="student-profile-grid">
+
+                    <div class="profile-info-item">
+                        <span>Full Name</span>
+                        <strong id="view_name_detail">-</strong>
+                    </div>
+
+                    <div class="profile-info-item">
+                        <span>Email Address</span>
+                        <strong id="view_email">-</strong>
+                    </div>
+
+                    <div class="profile-info-item">
+                        <span>Phone Number</span>
+                        <strong id="view_phone">-</strong>
+                    </div>
+
+                    <div class="profile-info-item">
+                        <span>Date of Birth</span>
+                        <strong id="view_date_of_birth">-</strong>
+                    </div>
+
+                    <div class="profile-info-item">
+                        <span>Gender</span>
+                        <strong id="view_gender">-</strong>
+                    </div>
+
+                    <div class="profile-info-item">
+                        <span>Academic Year</span>
+                        <strong id="view_year">-</strong>
+                    </div>
+
+                    <div class="profile-info-item">
+                        <span>Admission Date</span>
+                        <strong id="view_admission_date">-</strong>
+                    </div>
+
+                    <div class="profile-info-item full-width">
+                        <span>Address</span>
+                        <strong id="view_address">-</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <div class="student-modal-footer">
+
+                <button type="button" class="secondary-btn" id="closeViewStudentBtn">
+                Close
+            </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =========================================================
+     DELETE STUDENT CONFIRMATION MODAL
+========================================================= -->
+
+    <div class="student-modal" id="deleteStudentModal">
+
+        <div class="student-modal-box delete-confirm-box">
+
+            <div class="delete-confirm-icon">
+                <i class="fa-solid fa-trash"></i>
+            </div>
+
+            <div class="delete-confirm-content">
+
+                <h2>
+                    Delete Student?
+                </h2>
+
+                <p>
+                    Are you sure you want to delete
+                    <strong id="deleteStudentName">
+                    this student
+                </strong>?
+                </p>
+
+                <span>
+                This action cannot be undone.
+            </span>
+
+            </div>
+
+            <div class="student-modal-footer">
+
+                <button type="button" class="secondary-btn" id="cancelDeleteStudent">
+                Cancel
+            </button>
+
+                <button type="button" class="delete-confirm-btn" id="confirmDeleteStudent">
+                <i class="fa-solid fa-trash"></i>
+                Delete Student
+            </button>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- =========================================================
+         SEPARATE JAVASCRIPT
+    ========================================================== -->
+
+    <script src="{{ url_for('static', filename='js/students.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+
+</body>
+
+</html>
